@@ -1,0 +1,49 @@
+{
+  "vendas": [
+    {
+      "id": 1,
+      "vendedor": "João Silva",
+      "valor": 1200.50
+    },
+    {
+      "id": 2,
+      "vendedor": "João Silva",
+      "valor": 950.75
+    },
+    {
+      "id": 3,
+      "vendedor": "João Silva",
+      "valor": 1800.00
+    },
+    {
+      "id": 4,
+      "vendedor": "Maria Souza",
+      "valor": 2100.40
+    },
+    {
+      "id": 5,
+      "vendedor": "Maria Souza",
+      "valor": 400.50
+    },
+    {
+      "id": 6,
+      "vendedor": "Carlos Oliveira",
+      "valor": 800.50
+    },
+    {
+      "id": 7,
+      "vendedor": "Carlos Oliveira",
+      "valor": 300.40
+    },
+    {
+      "id": 8,
+      "vendedor": "Ana Lima",
+      "valor": 1000.00
+    },
+    {
+      "id": 9,
+      "vendedor": "Ana Lima",
+      "valor": 420.90
+    }
+  ]
+}
