@@ -1,8 +1,6 @@
 { 
   "estoque": 
-
   [ 
-
     { 
 
   "codigoProduto": 101, 
@@ -52,6 +50,6 @@
   "estoque": 90 
 
     } 
-
   ] 
 } 
+

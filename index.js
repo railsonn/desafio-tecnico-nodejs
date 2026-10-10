@@ -6,6 +6,8 @@ const users = require ('./users')
 
 const vendas = require ('./vendas.json')
 
+const estoque = require ("./estoque.json")
+
 app.use(express.json())
 
 app.get('/', (req, res) => {
@@ -43,6 +45,22 @@ app.get("/vendas", (req, res) => {
 
   res.json(vendedores);
 });
+
+app.post("/estoque/movimentacoes", (req, res) => {
+
+})
+
+app.get("/estoque", (req, res) => {
+  produto = estoque.id == req
+
+  if (produto) {
+    return produto 
+  } else {
+    res.json({
+      mensagem: "o produto especificado nao esta no estoque"
+    })
+  }
+})
 
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000")
