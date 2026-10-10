@@ -51,23 +51,25 @@ app.post("/estoque/movimentacoes", (req, res) => {
 })
 
 app.get("/estoque/:id", (req, res) => {
-  debugger
-  const produto = estoque.find( 
-    produto => produto.id == req.params.id 
-  );
+  const codigo = req.params.id
 
-  if (produto) {
-    return res.json(produto)
-  } else {
-    res.json({
-      mensagem: "o produto especificado nao esta no estoque"
-    })
-  }
+  const produto = estoque.estoque.find( 
+    produto => produto.codigoProduto == codigo 
+  ); 
+  
+  if (produto) { 
+    return res.json({ 
+      mensagem: "Produto encontrado com sucesso!", produto: produto 
+    }); 
+  } 
+  return res.status(404).json({ 
+    mensagem: "O produto especificado não está no estoque."
+  });
 })
 
 app.get('/estoque', (req,res) => {
   const produtos = estoque.estoque
-  
+
   if (produtos.length === 0) {
     return res.status(200).json({
       mensagem: "O estoque está vazio.",
