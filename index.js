@@ -6,7 +6,7 @@ const users = require ('./users')
 
 const vendas = require ('./vendas.json')
 
-const estoque = require ("./estoque.json")
+const estoque = require ('./estoque.json')
 
 app.use(express.json())
 
@@ -50,16 +50,37 @@ app.post("/estoque/movimentacoes", (req, res) => {
 
 })
 
-app.get("/estoque", (req, res) => {
-  produto = estoque.id == req
+app.get("/estoque/:id", (req, res) => {
+  debugger
+  const produto = estoque.find( 
+    produto => produto.id == req.params.id 
+  );
 
   if (produto) {
-    return produto 
+    return res.json(produto)
   } else {
     res.json({
       mensagem: "o produto especificado nao esta no estoque"
     })
   }
+})
+
+app.get('/estoque', (req,res) => {
+  const produtos = estoque.estoque
+  
+  if (produtos.length === 0) {
+    return res.status(200).json({
+      mensagem: "O estoque está vazio.",
+      totalProdutos: 0,
+      produtos: []
+    });
+  }
+
+  return res.status(200).json({
+    mensagem: "Produtos encontrados com sucesso!",
+    totalProdutos: produtos.length,
+    produtos
+  });
 })
 
 app.listen(3000, () => {
