@@ -46,8 +46,15 @@ app.get("/vendas", (req, res) => {
   res.json(vendedores);
 });
 
-app.post("/estoque/aplicacoes", (req, res) => {
+app.post("/aplicacoes", (req, res) => {
+  const produto = req.body;
 
+  console.log(produto);
+
+  res.json({
+      mensagem: "Produto recebido com sucesso!",
+      produto: produto
+  });
 })
 
 app.get("/estoque/:id", (req, res) => {
