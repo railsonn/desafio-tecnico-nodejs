@@ -46,7 +46,7 @@ app.get("/vendas", (req, res) => {
   res.json(vendedores);
 });
 
-app.post("/aplicacoes", (req, res) => {
+app.post("/estoque/aplicacoes", (req, res) => {
   const produto = req.body;
 
   console.log(produto);
