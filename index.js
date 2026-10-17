@@ -8,6 +8,8 @@ const vendas = require ('./vendas.json')
 
 const estoque = require ('./estoque.json')
 
+const Produto = require ("./class-produto")
+
 app.use(express.json())
 
 app.get('/', (req, res) => {
