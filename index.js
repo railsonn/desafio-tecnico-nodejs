@@ -10,6 +10,8 @@ const estoque = require ('./estoque.json')
 
 const Produto = require ("./class-produto")
 
+const array = []
+
 app.use(express.json())
 
 app.get('/', (req, res) => {
@@ -51,7 +53,9 @@ app.get("/vendas", (req, res) => {
 app.post("/estoque/aplicacoes", (req, res) => {
   const produto = req.body;
 
-  console.log(produto);
+  array.push(produto)
+
+  console.log(array);
 
   res.json({
       mensagem: "Produto recebido com sucesso!",
