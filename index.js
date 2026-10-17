@@ -48,6 +48,7 @@ app.get("/vendas", (req, res) => {
 
 app.post("/estoque/aplicacoes", (req, res) => {
   const produto = req.body;
+  const prod = prompt("digite o nome do produto")
 
   console.log(produto);
 
