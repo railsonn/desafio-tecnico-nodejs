@@ -98,6 +98,26 @@ app.get('/estoque', (req,res) => {
   });
 })
 
+app.get('/produtos', (req, res) => {
+  const pool = require('./database');
+
+  async function testarConexao() {
+      try {
+          const resultado = await pool.query('SELECT NOW()');
+
+          console.log('Conexão com PostgreSQL realizada!');
+          console.log('Horário do banco:', resultado.rows[0].now);
+          return res.json({
+            message: "hello world"
+          })
+      } catch (erro) {
+          console.error('Erro ao conectar:', erro.message);
+      }
+  }
+
+  testarConexao();
+})
+
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000")
 })
