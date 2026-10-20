@@ -10,6 +10,8 @@ const estoque = require ('./estoque.json')
 
 const Produto = require ("./class-produto")
 
+const pool = require('./database');
+
 const array = []
 
 app.use(express.json())
@@ -50,17 +52,23 @@ app.get("/vendas", (req, res) => {
   res.json(vendedores);
 });
 
-app.post("/estoque/aplicacoes", (req, res) => {
+app.post("/estoque/aplicacoes", async (req, res) => {
   const produto = req.body;
+  
+  console.log(produto)
+  try { 
+    const aplicacao = await pool.query(`INSERT INTO estoque (descricao_produto, estoque) 
+      VALUES ($1, $2) RETURNING *`, [produto.descricao_produto, produto.estoque] );
 
-  array.push(produto)
-
-  console.log(array);
-
-  res.json({
-      mensagem: "Produto recebido com sucesso!",
-      produto: produto
-  });
+    res.status(201).json({ 
+      message: "Produto adicionado ao estoque", produto: aplicacao.rows[0] 
+    }); 
+  } catch (erro) { 
+    console.error(erro); 
+    res.status(500).json({ 
+      erro: "Erro ao adicionar produto ao estoque" 
+    }); 
+  }
 })
 
 app.get("/estoque/:id", (req, res) => {
@@ -98,25 +106,16 @@ app.get('/estoque', (req,res) => {
   });
 })
 
-app.get('/produtos', (req, res) => {
-  const pool = require('./database');
+app.get('/produtos', async (req, res) => {
+    try {
+      const resultado = await pool.query('SELECT * FROM estoque');
 
-  async function testarConexao() {
-      try {
-          const resultado = await pool.query('SELECT NOW()');
-
-          console.log('Conexão com PostgreSQL realizada!');
-          console.log('Horário do banco:', resultado.rows[0].now);
-          return res.json({
-            message: "hello world"
-          })
-      } catch (erro) {
-          console.error('Erro ao conectar:', erro.message);
-      }
-  }
-
-  testarConexao();
-})
+      res.json(resultado.rows);
+    } catch (erro) {
+      console.error(erro);
+      res.status(500).json({ erro: 'Erro ao consultar o estoque' });
+    }
+});
 
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000")
