@@ -106,7 +106,11 @@ app.get('/estoque', async (req, res) => {
       sucesso: true,
       mensagem: 'Produtos encontrados com sucesso!',
       total: resultado.rows.length,
-      produtos: resultado.rows
+      produtos: resultado.rows.map(produto => ({
+        codigo_produto: produto.codigo_produto,
+        descricao_produto: produto.descricao_produto,
+        estoque: produto.estoque
+      }))
     });
 
   } catch (error) {
