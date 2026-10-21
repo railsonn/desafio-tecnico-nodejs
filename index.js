@@ -57,8 +57,18 @@ app.post("/estoque/aplicacoes", async (req, res) => {
   
   console.log(produto)
   try { 
-    const aplicacao = await pool.query(`INSERT INTO estoque (descricao_produto, estoque) 
-      VALUES ($1, $2) RETURNING *`, [produto.descricao_produto, produto.estoque] );
+    identify_product = await pool.query(`SELECT * FROM estoque WHERE codigo_produto = ${produto.codigo_produto}`)
+
+    if (identify_product.rows != 0) {
+      const estoque = await pool.query(`SELECT estoque FROM estoque WHERE codigo_produto = ${produto.codigo_produto}`)
+      console.log(`estoque: ${parseInt(estoque.codigo_produto)}`)
+
+      const aplicacao = await pool.query(`INSERT INTO estoque (codigo_produto, descricao_produto, estoque) 
+        VALUES ($1, $2, $3) RETURNING *`, [produto.codigo_produto, produto.descricao_produto, produto.estoque + estoque] );
+    } else {
+      const aplicacao = await pool.query(`INSERT INTO estoque (codigo_produto, descricao_produto, estoque) 
+        VALUES ($1, $2, $3) RETURNING *`, [produto.codigo_produto, produto.descricao_produto, produto.estoque] );
+    }
 
     res.status(201).json({ 
       message: "Produto adicionado ao estoque", produto: aplicacao.rows[0] 
@@ -88,23 +98,27 @@ app.get("/estoque/:id", (req, res) => {
   });
 })
 
-app.get('/estoque', (req,res) => {
-  const produtos = estoque.estoque
+app.get('/estoque', async (req, res) => {
+  try {
+    const resultado = await pool.query('SELECT * FROM estoque');
 
-  if (produtos.length === 0) {
-    return res.status(200).json({
-      mensagem: "O estoque está vazio.",
-      totalProdutos: 0,
-      produtos: []
+    res.status(200).json({
+      sucesso: true,
+      mensagem: 'Produtos encontrados com sucesso!',
+      total: resultado.rows.length,
+      produtos: resultado.rows
+    });
+
+  } catch (error) {
+    console.error('Erro ao consultar o estoque:', error);
+
+    res.status(500).json({
+      sucesso: false,
+      mensagem: 'Erro ao consultar o estoque.',
+      erro: 'Erro interno do servidor.'
     });
   }
-
-  return res.status(200).json({
-    mensagem: "Produtos encontrados com sucesso!",
-    totalProdutos: produtos.length,
-    produtos
-  });
-})
+});
 
 app.get('/produtos', async (req, res) => {
     try {
