@@ -56,29 +56,43 @@ app.post("/estoque/aplicacoes", async (req, res) => {
   const produto = req.body;
   
   console.log(produto)
-  try { 
-    identify_product = await pool.query(`SELECT * FROM estoque WHERE codigo_produto = ${produto.codigo_produto}`)
+  try {
+    const produto = req.body;
 
-    if (identify_product.rows != 0) {
-      const estoque = await pool.query(`SELECT estoque FROM estoque WHERE codigo_produto = ${produto.codigo_produto}`)
-      console.log(`estoque: ${parseInt(estoque.codigo_produto)}`)
+    const quantidade = Number(produto.estoque);
+    const codigo = produto.codigo_produto;
 
-      const aplicacao = await pool.query(`INSERT INTO estoque (codigo_produto, descricao_produto, estoque) 
-        VALUES ($1, $2, $3) RETURNING *`, [produto.codigo_produto, produto.descricao_produto, produto.estoque + estoque] );
-    } else {
-      const aplicacao = await pool.query(`INSERT INTO estoque (codigo_produto, descricao_produto, estoque) 
-        VALUES ($1, $2, $3) RETURNING *`, [produto.codigo_produto, produto.descricao_produto, produto.estoque] );
+    const resultado = await pool.query(
+      `UPDATE estoque
+       SET estoque = estoque + $1
+       WHERE codigo_produto = $2
+       RETURNING *`,
+      [quantidade, codigo]
+    );
+
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({
+        sucesso: false,
+        mensagem: 'Produto não encontrado.'
+      });
     }
 
-    res.status(201).json({ 
-      message: "Produto adicionado ao estoque", produto: aplicacao.rows[0] 
-    }); 
+    res.status(200).json({
+      sucesso: true,
+      mensagem: 'Estoque atualizado com sucesso!',
+      produto: resultado.rows[0]
+    });
+    
   } catch (erro) { 
     console.error(erro); 
     res.status(500).json({ 
       erro: "Erro ao adicionar produto ao estoque" 
     }); 
   }
+})
+
+app.delete("/estoque/aplicacoes/:id", async (req, res) => {
+   
 })
 
 app.get("/estoque/:id", (req, res) => {
