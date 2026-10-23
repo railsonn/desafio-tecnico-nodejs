@@ -69,10 +69,8 @@ app.post("/estoque/aplicacoes", async (req, res) => {
     );
 
     if (resultado.rows.length === 0) {
-      return res.status(404).json({
-        sucesso: false,
-        mensagem: 'Produto não encontrado.'
-      });
+      `INSERT INTO estoque (codigo_produto, descricao_produto, estoque) VALUES ($1, $2, $3) RETURNING *`,
+      [produto.codigo_produto, produto.descricao_produto, produto.estoque]
     }
 
     res.status(200).json({
@@ -98,6 +96,8 @@ app.delete("/estoque/aplicacoes/:id", async (req, res) => {
       [codigo]
     );
 
+    console.log(resultado.rows)
+    
     if (resultado.rows.length === 0) {
       return res.status(404).json({
         sucesso: false,
