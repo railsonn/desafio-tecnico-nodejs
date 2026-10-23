@@ -63,9 +63,7 @@ app.post("/estoque/aplicacoes", async (req, res) => {
     const codigo = produto.codigo_produto;
 
     const resultado = await pool.query(
-      `UPDATE estoque
-       SET estoque = estoque + $1
-       WHERE codigo_produto = $2
+      `UPDATE estoque SET estoque = estoque + $1 WHERE codigo_produto = $2
        RETURNING *`,
       [quantidade, codigo]
     );
@@ -92,7 +90,33 @@ app.post("/estoque/aplicacoes", async (req, res) => {
 })
 
 app.delete("/estoque/aplicacoes/:id", async (req, res) => {
-   
+  const codigo = req.params.id;
+
+  try {
+    const resultado = await pool.query(
+      `DELETE FROM estoque WHERE codigo_produto = $1 RETURNING *`,
+      [codigo]
+    );
+
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({
+        sucesso: false,
+        mensagem: 'Produto não encontrado.'
+      });
+    }
+
+    res.status(200).json({
+      sucesso: true,
+      mensagem: 'Produto removido do estoque com sucesso!',
+      produto: resultado.rows[0]
+    });
+
+  } catch (erro) {
+    console.error(erro);
+    res.status(500).json({
+      erro: "Erro ao remover produto do estoque"
+    });
+  }
 })
 
 app.get("/estoque/:id", (req, res) => {
