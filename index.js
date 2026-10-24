@@ -54,9 +54,10 @@ app.get("/vendas", (req, res) => {
 
 // rota para movimentações de entrada 
 app.post("/estoque/aplicacoes", async (req, res) => {
-  const { codigo_produto, produto, estoque, descricao } = req.body;
+  const { codigo_produto, produto, estoque } = req.body;
 
   const quantidade = Number(estoque);
+  const descricao = "aplicação de estoque ao produto"
 
   try {
     if (!codigo_produto || !produto || !Number.isInteger(quantidade) || !descricao || quantidade <= 0) {
@@ -66,14 +67,18 @@ app.post("/estoque/aplicacoes", async (req, res) => {
     }
 
     let resultado = await pool.query(
-      `UPDATE estoque SET estoque = estoque + $1 WHERE codigo_produto = $2
+      `UPDATE estoque SET estoque = estoque + $1, descricao = $2 WHERE codigo_produto = $3
        RETURNING *`,
-      [quantidade, codigo_produto]
+      [quantidade, descricao, codigo_produto]
+
+
     );
 
     if (resultado.rows.length === 0) {
+      const descricao = "aplicação de produto no estoque";
+
       resultado = await pool.query(
-        `INSERT INTO estoque (codigo_produto, produto, estoque, descricao) VALUES ($1, $2, $3)
+        `INSERT INTO estoque (codigo_produto, produto, estoque, descricao) VALUES ($1, $2, $3, $4)
          RETURNING *`,
         [codigo_produto, produto, quantidade, descricao]
       );
