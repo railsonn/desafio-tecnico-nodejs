@@ -8,9 +8,9 @@ const vendas = require ('./vendas.json')
 
 const estoque = require ('./estoque.json')
 
-const Produto = require ("./class-produto")
-
 const pool = require('./database');
+
+const vencimento = require('./vencimento')
 
 const array = []
 
@@ -27,7 +27,6 @@ app.get("/usuarios", (req, res) => {
 })
 
 app.get("/vendas", (req, res) => {
-
   const vendedores = {};
 
   vendas.vendas.forEach(venda => {
@@ -150,6 +149,12 @@ app.get("/estoque/:id", (req, res) => {
 })
 
 app.get('/estoque', async (req, res) => {
+  console.log('Consultando o estoque...');
+  console.log('Código do produto:', req.query.codigo_produto);
+  console.log('Descrição do produto:', req.query.descricao_produto);
+  console.log('Quantidade em estoque:', req.query.estoque);
+  console.log('Data de vencimento:', req.query.data_vencimento);
+  
   try {
     const resultado = await pool.query('SELECT * FROM estoque');
 
