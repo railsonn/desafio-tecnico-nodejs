@@ -59,7 +59,7 @@ app.post("/estoque/aplicacoes", async (req, res) => {
   const quantidade = Number(estoque);
 
   try {
-    if (!codigo_produto || !descricao_produto || !Number.isInteger(quantidade) || quantidade <= 0) {
+    if (!codigo_produto || !produto || !Number.isInteger(quantidade) || !descricao || quantidade <= 0) {
       return res.status(400).json({
         erro: "Dados do produto inválidos"
       });
@@ -75,7 +75,7 @@ app.post("/estoque/aplicacoes", async (req, res) => {
       resultado = await pool.query(
         `INSERT INTO estoque (codigo_produto, produto, estoque, descricao) VALUES ($1, $2, $3)
          RETURNING *`,
-        [codigo_produto, descricao_produto, quantidade]
+        [codigo_produto, produto, quantidade, descricao]
       );
     }
 
