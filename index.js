@@ -52,43 +52,49 @@ app.get("/vendas", (req, res) => {
   res.json(vendedores);
 });
 
+// rota para movimentações de entrada 
 app.post("/estoque/aplicacoes", async (req, res) => {
-  const produto = req.body;
-  
-  console.log(produto)
-  try {
-    const produto = req.body;
+  const { codigo_produto, descricao_produto, estoque } = req.body;
 
-    const quantidade = Number(produto.estoque);
-    const codigo = produto.codigo_produto;
+  const quantidade = Number(estoque);
+
+  try {
+    if (!codigo_produto || !descricao_produto || !Number.isInteger(quantidade) || quantidade <= 0) {
+      return res.status(400).json({
+        erro: "Dados do produto inválidos"
+      });
+    }
 
     let resultado = await pool.query(
       `UPDATE estoque SET estoque = estoque + $1 WHERE codigo_produto = $2
        RETURNING *`,
-      [quantidade, codigo]
+      [quantidade, codigo_produto]
     );
 
     if (resultado.rows.length === 0) {
       resultado = await pool.query(
-        `INSERT INTO estoque (codigo_produto, descricao_produto, estoque) VALUES ($1, $2, $3) RETURNING *`,
-        [produto.codigo_produto, produto.descricao_produto, produto.estoque]
+        `INSERT INTO estoque (codigo_produto, produto, estoque) VALUES ($1, $2, $3)
+         RETURNING *`,
+        [codigo_produto, descricao_produto, quantidade]
       );
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       sucesso: true,
-      mensagem: 'Estoque atualizado com sucesso!',
+      mensagem: "Estoque atualizado com sucesso!",
       produto: resultado.rows[0]
     });
-    
-  } catch (erro) { 
-    console.error(erro); 
-    res.status(500).json({ 
-      erro: "Erro ao adicionar produto ao estoque" 
-    }); 
-  }
-})
 
+  } catch (erro) {
+    console.error(erro);
+
+    return res.status(500).json({
+      erro: "Erro ao adicionar produto ao estoque"
+    });
+  }
+});
+
+// rota para movimentações de saída 
 app.delete("/estoque/aplicacoes/:id", async (req, res) => {
   const codigo = req.params.id;
 
