@@ -1,3 +1,14 @@
+const express = require ('express');
+
+const app = express();
+
+const estoque = require ('./estoque.json')
+
+const pool = require('./database');
+
+const vencimento = require('./vencimento')
+
+
 app.post("/estoque/aplicacoes", async (req, res) => {
   const { codigo_produto, produto, estoque } = req.body;
 
@@ -124,13 +135,6 @@ app.get('/estoque', async (req, res) => {
   }
 });
 
-app.get('/produtos', async (req, res) => {
-    try {
-      const resultado = await pool.query('SELECT * FROM estoque');
-
-      res.json(resultado.rows);
-    } catch (erro) {
-      console.error(erro);
-      res.status(500).json({ erro: 'Erro ao consultar o estoque' });
-    }
+app.listen(3040, () => {
+  console.log('Servidor rodando na porta 3040');
 });
