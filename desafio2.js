@@ -6,8 +6,6 @@ const estoque = require ('./estoque.json')
 
 const pool = require('./database');
 
-const vencimento = require('./vencimento')
-
 
 app.post("/estoque/aplicacoes", async (req, res) => {
   const { codigo_produto, produto, estoque } = req.body;
@@ -106,8 +104,6 @@ app.get("/estoque/:id", (req, res) => {
 })
 
 app.get('/estoque', async (req, res) => {
-  console.log('Consultando o estoque...');
-  console.log('Data de vencimento:', vencimento);
 
   try {
     const resultado = await pool.query('SELECT * FROM estoque');
@@ -115,7 +111,6 @@ app.get('/estoque', async (req, res) => {
     res.status(200).json({
       sucesso: true,
       mensagem: 'Produtos encontrados com sucesso!',
-      vencimento: vencimento,
       total: resultado.rows.length,
       produtos: resultado.rows.map(produto => ({
         codigo_produto: produto.codigo_produto,
