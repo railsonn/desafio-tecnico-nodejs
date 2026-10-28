@@ -1,4 +1,4 @@
-const vencimento = (data) => {
+const functionVencimento = (data) => {
     const dataAtual = new Date();
     const dataVencimento = new Date(data);
   
@@ -9,6 +9,5 @@ const vencimento = (data) => {
     }
   };
 
-vencimento("2023-06-15"); // Produto vencido
 
-module.exports = vencimento
+module.exports = functionVencimento("2024-06-15");

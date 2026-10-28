@@ -140,7 +140,7 @@ app.get("/estoque/:id", (req, res) => {
   
   if (produto) { 
     return res.json({ 
-      mensagem: "Produto encontrado com sucesso!", produto: produto 
+      mensagem: "Produto encontrado com sucesso!", produto: produto
     }); 
   } 
   return res.status(404).json({ 
@@ -150,17 +150,15 @@ app.get("/estoque/:id", (req, res) => {
 
 app.get('/estoque', async (req, res) => {
   console.log('Consultando o estoque...');
-  console.log('Código do produto:', req.query.codigo_produto);
-  console.log('Descrição do produto:', req.query.descricao_produto);
-  console.log('Quantidade em estoque:', req.query.estoque);
-  console.log('Data de vencimento:', req.query.data_vencimento);
-  
+  console.log('Data de vencimento:', vencimento);
+
   try {
     const resultado = await pool.query('SELECT * FROM estoque');
 
     res.status(200).json({
       sucesso: true,
       mensagem: 'Produtos encontrados com sucesso!',
+      vencimento: vencimento,
       total: resultado.rows.length,
       produtos: resultado.rows.map(produto => ({
         codigo_produto: produto.codigo_produto,
@@ -178,17 +176,6 @@ app.get('/estoque', async (req, res) => {
       erro: 'Erro interno do servidor.'
     });
   }
-});
-
-app.get('/produtos', async (req, res) => {
-    try {
-      const resultado = await pool.query('SELECT * FROM estoque');
-
-      res.json(resultado.rows);
-    } catch (erro) {
-      console.error(erro);
-      res.status(500).json({ erro: 'Erro ao consultar o estoque' });
-    }
 });
 
 app.listen(3000, () => {
