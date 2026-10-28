@@ -4,7 +4,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "start": "nodemon index.js",
+    "des1": "nodemon desafio1.js",
+    "des2": "nodemon desafio2.js",
+    "des3": "nodemon desafio3.js"
   },
   "keywords": [],
   "author": "railson",
