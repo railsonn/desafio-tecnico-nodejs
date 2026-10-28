@@ -1,0 +1,59 @@
+# Dependências
+
+node_modules/
+
+# Variáveis de ambiente e credenciais
+
+.env
+.env.*
+!.env.example
+
+# Logs
+
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Arquivos temporários
+
+tmp/
+temp/
+*.tmp
+
+# Cobertura de testes
+
+coverage/
+
+# Cache
+
+.npm/
+.eslintcache
+
+# Arquivos do sistema operacional
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores e IDEs
+
+.vscode/
+.idea/
+
+# Arquivos de backup
+
+*.bak
+*.old
+*~
+
+# Arquivos de configuração local
+
+config.local.js
+
+# Banco de dados local SQLite
+
+*.sqlite
+*.sqlite3
+*.db
