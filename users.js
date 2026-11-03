@@ -1,13 +1,13 @@
 const users = [
     {
         id: 1,
-        nome: 'Railson',
-        email: 'railson@email.com'
+        nome: 'Maria',
+        email: 'maria.silva@gmail.com'
     },
     {
         id: 2,
-        nome: 'João',
-        email: 'joao@email.com'
+        nome: 'Empresa',
+        email: 'contato.empresa@hotmail.com'
     }
 ];
 
